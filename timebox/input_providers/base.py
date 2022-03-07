@@ -1,27 +1,39 @@
 import abc
-import logging
-from typing import IO, Optional
+import gzip
+import os
+import shutil
+from pathlib import Path
 
-from pydantic import BaseSettings
-
-from timebox.utils import error_handler
-
-from ..common import BackupItem
-
-logger = logging.getLogger(__name__)
+from ..common import BackupItem, ProviderCommon, TempDir
 
 
-class InputProviderBase(BaseSettings, abc.ABC):
-    env_prefix: str = ""
+class InputProviderBase(ProviderCommon, abc.ABC):
+    _skip_compress = False
 
-    @abc.abstractmethod
-    def _backup(self, backup_item: BackupItem) -> IO[bytes]:
-        pass
+    type: str
+    compression: bool = True
 
     @abc.abstractmethod
-    def __str__(self):
+    def _dump(self, tempdir: TempDir, backup_item: BackupItem) -> Path:
         pass
 
-    @error_handler(logger, "performing backup")
-    def backup(self, backup_item: BackupItem) -> Optional[IO[bytes]]:
-        return self._backup(backup_item)
+    def dump(self, tempdir: TempDir, backup_item: BackupItem) -> Path:
+        temp_file_out = self._dump(tempdir, backup_item)
+        size = os.path.getsize(temp_file_out)
+        self.logger.debug(f"Wrote in %s: %s bytes", temp_file_out, size)
+        if not self._skip_compress and self.compression:
+            compressed_file_out = self.compress(tempdir, backup_item, temp_file_out)
+            os.remove(temp_file_out)
+            temp_file_out = compressed_file_out
+            size = os.path.getsize(temp_file_out)
+            self.logger.debug(f"Wrote in %s: %s bytes", temp_file_out, size)
+        return temp_file_out
+
+    def compress(self, tempdir, backup_item: BackupItem, temp_file_in):
+        temp_file_out = tempdir.get_temp_filepath()
+        self.logger.debug("Compressing with gzip to %s", temp_file_out)
+        with open(temp_file_in, "rb") as f_in:
+            with gzip.open(temp_file_out, "wb") as f_out:
+                shutil.copyfileobj(f_in, f_out)
+        backup_item.extensions.append("gzip")
+        return temp_file_out

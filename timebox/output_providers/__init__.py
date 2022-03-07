@@ -1,5 +1,6 @@
-from pydantic.main import BaseModel
+from typing import Union
 
 from .folder import FolderOutputProvider
+from .rclone import RCloneOutputProvider
 
-OutputProvider = FolderOutputProvider
+OutputProvider = Union[FolderOutputProvider, RCloneOutputProvider]

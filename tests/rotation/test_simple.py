@@ -11,4 +11,3 @@ def test_simple_rotation():
 
     item2 = BackupItem(name="test1", date=date.today() - timedelta(days=5))
     assert rotation.remaining_days(item2) == 0
-

@@ -1,3 +1,6 @@
-from .folder import FolderInputProvider
+from typing import Union
 
-InputProvider = FolderInputProvider
+from .folder import FolderInputProvider
+from .postgres import PostgresInputProvider
+
+InputProvider = Union[FolderInputProvider, PostgresInputProvider]

@@ -3,40 +3,78 @@ from datetime import datetime
 
 import yaml
 
-from .common import BackupItem
-from .config import Config, ConfigItem
+from timebox.config import Backup, Config
+
+from .common import BackupItem, TempDir
 
 logger = logging.getLogger(__name__)
 
-def backup(config: Config):
-    date = datetime.now().replace(microsecond=0)
-    for item in config.items:
-        backup_item = BackupItem(name=item.name, date=date)
-        backup = item.input.backup(backup_item)
-        if backup is None:
-            continue
-        for output in item.outputs:
-            output.save(backup_item, backup)
 
+class Engine:
+    def __init__(self, backups: list[Backup], config: Config):
+        self.backups = backups
+        self.config = config
+        self.date = datetime.now().replace(microsecond=0)
+        self.provide_secrets()
+        self.tempdir = TempDir()
 
-def rotate(config: Config):
-    for config_item in config.items:
-        for output in config_item.outputs:
-            output_items = output.ls(config_item.name)
-            for output_item in output_items:
-                if config_item.rotation.remaining_days(output_item) == 0:
-                    output.delete(output_item)
+    def provide_secrets(self):
+        if self.config.secrets_file is None:
+            logger.info("No secrets file provided.")
+            secrets = {}
+        else:
+            with open(self.config.secrets_file) as f:
+                secrets = yaml.load(f.read(), Loader=yaml.Loader)
 
+        for backup in self.backups:
+            backup.input.set_secrets(secrets)
+            for output in backup.outputs:
+                output.set_secrets(secrets)
 
-def ls(config: Config):
-    for config_item in config.items:
-        for output in config_item.outputs:
-            output_items = output.ls(config_item.name)
-            logger.info("Items for output %s", output)
-            for item in output_items:
-                logger.info("\t%s: %s remaining days.", item, config_item.rotation.remaining_days(item))
+    def create_backups(self):
+        for backup in self.backups:
+            backup_item = BackupItem(name=backup.name, date=self.date)
+            try:
+                dump_file = backup.input.dump(self.tempdir, backup_item)
+            except Exception as exc:
+                logger.error("Failed performing backup dump for %s", backup_item)
+                logger.exception(exc)
+                continue
+            for output in backup.outputs:
+                output.save(dump_file, backup_item)
 
-def load_config(config_file):
-    with open(config_file) as f:
-        config_data = yaml.load(f.read(), Loader=yaml.Loader)
-    return Config.parse_obj(config_data)
+    def rotate_backups(self):
+        for backup in self.backups:
+            for output in backup.outputs:
+                try:
+                    output_items = output.ls(backup.name)
+                except Exception as exc:
+                    logger.error("Failed listing backups in %s", output)
+                    logger.exception(exc)
+                    continue
+                for output_item in output_items:
+                    if backup.rotation.remaining_days(output_item) == 0:
+                        try:
+                            output.delete(output_item)
+                        except Exception as exc:
+                            logger.error(
+                                "Failed deleting backup for %s in %s", output_item, output
+                            )
+                            logger.exception(exc)
+
+    def run(self):
+        self.create_backups()
+        self.rotate_backups()
+
+    def ls(self):
+        for backup in self.backups:
+            for output in backup.outputs:
+                try:
+                    output_items = output.ls(backup.name)
+                except Exception as exc:
+                    logger.error("Failed listing backups in %s", output)
+                    logger.exception(exc)
+                    continue
+                print(f"Items for output {output}")
+                for item in output_items:
+                    print(f"\t{item}: {backup.rotation.remaining_days(item)} remaining days.")
