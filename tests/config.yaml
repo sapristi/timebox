@@ -1,0 +1,11 @@
+items:
+  - name: test
+    input:
+      type: folder
+      path: tests/input
+    outputs:
+      - type: folder
+        path: tests/output2
+    rotation:
+      type: simple
+      days: 2
