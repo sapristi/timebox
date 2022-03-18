@@ -19,6 +19,9 @@ class LogLevel(str, Enum):
 
 
 class Config(BaseModel):
+    class Config:
+        use_enum_values = True
+
     swallow_errors: bool = True
     log_level: LogLevel = LogLevel.WARNING
     overwrite: bool = False
