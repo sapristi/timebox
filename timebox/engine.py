@@ -19,10 +19,13 @@ class Engine:
         self.tempdir = TempDir()
 
     def provide_secrets(self):
+        if not self.config.use_secrets:
+            return
         if self.config.secrets_file is None:
-            logger.info("No secrets file provided.")
+            logger.debug("Fetching secrets from environment.")
             secrets = {}
         else:
+            logger.debug("Fetching secrets from environment and %s.", self.config.secrets_file)
             with open(self.config.secrets_file) as f:
                 secrets = yaml.load(f.read(), Loader=yaml.Loader)
 

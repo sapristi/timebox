@@ -1,5 +1,6 @@
 import abc
 import logging
+import os
 import re
 from datetime import date, datetime
 from enum import Enum
@@ -74,6 +75,8 @@ class ProviderCommon(BaseModel, abc.ABC):
         for field in secret_fields:
             value = getattr(self, field.name)
             if value is not None:
+                if value in os.environ:
+                    setattr(self, field.name, os.environ[value])
                 if value in secrets:
                     setattr(self, field.name, secrets[value])
                 else:

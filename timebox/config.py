@@ -25,6 +25,7 @@ class Config(BaseModel):
     swallow_errors: bool = True
     log_level: LogLevel = LogLevel.WARNING
     overwrite: bool = False
+    use_secrets: bool = True
     secrets_file: Optional[Path] = None
 
 
