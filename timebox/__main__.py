@@ -20,20 +20,20 @@ def load_config_file(config_file):
         exit(1)
     with open(config_file) as f:
         config_data = yaml.load(f.read(), Loader=yaml.Loader)
-    return ConfigFile.parse_obj(config_data).parse_backups()
+    try:
+        return ConfigFile.parse_obj(config_data).parse_backups()
+    except Exception:
+        print(
+            f"{t.red + t.bold}ERROR{t.normal}: Parsing of config file {t.bold}{config_file}{t.normal} failed.\n"
+        )
+        exit(1)
 
 
 def main():
     args = parser.parse_args()
 
     if args.command == "validate-config":
-        try:
-            config_file = load_config_file(args.config)
-        except Exception:
-            print(
-                f"{t.red + t.bold}ERROR{t.normal}: Parsing of config file {t.bold}{args.config}{t.normal} failed.\n"
-            )
-            raise
+        config_file = load_config_file(args.config)
         print(yaml.dump(config_file.dict(), sort_keys=False))
         sys.exit(0)
 

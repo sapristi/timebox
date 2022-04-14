@@ -72,3 +72,45 @@ def format_size(value):
 
 #     with gzip.open('/home/joe/file.txt.gz', 'wb') as f_out:
 #         shutil.copyfileobj(f_in, f_out)
+
+
+def generate_union_parser(union_type):
+    union_type_name = union_type.__name__
+
+    def parse_union_type(cls, value):
+        if value is None:
+            return None
+        try:
+            target_type = value.get("type")
+        except Exception:
+            raise ValueError(f"{union_type_name} config does not have a `type` field: {value}")
+        import inspect
+
+        accepted_types = {
+            inspect.signature(t).parameters["type"].annotation.__args__[0]: t
+            for t in union_type.__args__
+        }
+        target_class = accepted_types.get(target_type)
+        if target_class is None:
+            raise ValueError(f"{union_type_name} of type {target_type} does not exist ({value})")
+
+        try:
+            return target_class.parse_obj(value)
+        except Exception as exc:
+            print(f"Failed parsing {target_class.__name__} from {value}")
+            print(exc)
+            print()
+            raise
+
+    return parse_union_type
+
+
+def generate_union_parser_list(union_type):
+    parse_union_type = generate_union_parser(union_type)
+
+    def parse_union_type_list(cls, value):
+        if not isinstance(value, list):
+            print("Expected {value} to be a list")
+        return [parse_union_type(cls, elem) for elem in value]
+
+    return parse_union_type_list

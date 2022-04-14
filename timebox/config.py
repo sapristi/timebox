@@ -3,12 +3,15 @@ from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from pydantic import validator
+
 from timebox.notification_providers import NotificationProvider
 
 from .common import BaseModel, t
 from .input_providers import InputProvider
 from .output_providers import OutputProvider
 from .rotation_providers import RotationProvider
+from .utils import generate_union_parser, generate_union_parser_list
 
 logger = logging.getLogger(__name__)
 
@@ -31,12 +34,23 @@ class Config(BaseModel):
     secrets_file: Optional[Path] = None
     notification: Optional[NotificationProvider] = None
 
+    parse_notification = validator("notification", pre=True, allow_reuse=True)(
+        generate_union_parser(NotificationProvider)
+    )
+
 
 class Backup(BaseModel):
     name: str
     input: InputProvider
     outputs: list[OutputProvider]
     rotation: RotationProvider
+
+    parse_input = validator("input", pre=True, allow_reuse=True)(
+        generate_union_parser(InputProvider)
+    )
+    parse_outputs = validator("outputs", pre=True, allow_reuse=True)(
+        generate_union_parser_list(OutputProvider)
+    )
 
 
 class ParsedConfigFile(BaseModel):
