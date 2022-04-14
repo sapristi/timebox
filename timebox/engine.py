@@ -40,8 +40,8 @@ class Engine:
             try:
                 dump_file = backup.input.dump(self.tempdir, backup_item)
             except Exception as exc:
-                logger.error("Failed performing backup dump for %s", backup_item)
-                logger.exception(exc)
+                message = f"Failed creating dump for {backup_item} ({exc})"
+                logger.exception(message)
                 continue
             for output in backup.outputs:
                 output.save(dump_file, backup_item)
@@ -52,18 +52,18 @@ class Engine:
                 try:
                     output_items = output.ls(backup.name)
                 except Exception as exc:
-                    logger.error("Failed listing backups in %s", output)
-                    logger.exception(exc)
+                    message = f"Failed listing backups in {output} ({exc})"
+                    logger.exception(message)
                     continue
                 for output_item in output_items:
                     if backup.rotation.remaining_days(output_item) == 0:
                         try:
                             output.delete(output_item)
                         except Exception as exc:
-                            logger.error(
-                                "Failed deleting backup for %s in %s", output_item, output
+                            message = (
+                                f"Failed deleting backup for {output_item} in {output} ({exc})"
                             )
-                            logger.exception(exc)
+                            logger.exception(message)
 
     def run(self):
         self.create_backups()
@@ -74,9 +74,8 @@ class Engine:
             for output in backup.outputs:
                 try:
                     output_items = output.ls(backup.name)
-                except Exception as exc:
-                    logger.error("Failed listing backups in %s", output)
-                    logger.exception(exc)
+                except Exception:
+                    logger.exception("Failed listing backups in %s", output)
                     continue
                 print(f"Items for output {output}")
                 for item in output_items:

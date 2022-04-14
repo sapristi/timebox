@@ -25,10 +25,5 @@ class FolderInputProvider(InputProviderBase):
 
         return output
 
-    def command(self):
-        root_dir = str(self.path.name)
-        path_to = str(self.path.parent.absolute().resolve())
-        return ["/usr/bin/tar", "-C", path_to, "-c", root_dir]
-
     def __str__(self):
         return f"{self.type}:{self.path}"

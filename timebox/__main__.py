@@ -42,7 +42,7 @@ def main():
     handler = logging.StreamHandler()
     handler.setFormatter(logging.Formatter("%(asctime)s | %(levelname)s | [%(name)s] %(message)s"))
     logger.addHandler(handler)
-    logger.setLevel(config_file.config.log_level.value)
+    logger.setLevel(config_file.config.log_level)
 
     engine = Engine(config_file.backups, config_file.config)
     if args.command == "run":

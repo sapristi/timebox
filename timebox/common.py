@@ -6,7 +6,7 @@ from datetime import date, datetime
 from enum import Enum
 from pathlib import Path
 from tempfile import TemporaryDirectory, _TemporaryFileWrapper
-from typing import Optional
+from typing import Dict, List, Optional
 
 import pydantic
 from blessings import Terminal
@@ -29,7 +29,7 @@ class BaseModel(pydantic.BaseModel):
 class BackupItem(BaseModel):
     name: str
     date: date
-    extensions: list[str] = []
+    extensions: List[str] = []
     size: Optional[int] = None
 
     @staticmethod
@@ -55,7 +55,7 @@ class BackupItem(BaseModel):
             size_str = ""
         else:
             size_str = f" ({format_size(self.size)})"
-        return f"[{self.name} at {self.date}{size_str}]"
+        return f"[{self.name} on {self.date}{size_str}]"
 
 
 class ProviderCommon(BaseModel, abc.ABC):
@@ -70,7 +70,7 @@ class ProviderCommon(BaseModel, abc.ABC):
     def logger(self):
         return logging.getLogger(f"timebox.{self}")
 
-    def set_secrets(self, secrets: dict[str, str]):
+    def set_secrets(self, secrets: Dict[str, str]):
         secret_fields = [f for f in self.__fields__.values() if f.field_info.extra.get("secret")]
         for field in secret_fields:
             value = getattr(self, field.name)

@@ -1,6 +1,6 @@
 import abc
 from pathlib import Path
-from typing import Tuple
+from typing import List, Tuple
 
 from timebox.common import BackupItem, ProviderCommon
 
@@ -15,19 +15,24 @@ class OuputProviderBase(ProviderCommon, abc.ABC):
         pass
 
     @abc.abstractmethod
-    def _ls_all(self) -> list[Tuple[str, int]]:
+    def _ls_all(self) -> List[Tuple[str, int]]:
         pass
 
     def already_exists(self, backup_item: BackupItem):
         items = self.ls(backup_item.name)
         return backup_item in items
 
-    def save(self, input_file: Path, backup_item: BackupItem):
+    def save(self, input_file: Path, backup_item: BackupItem) -> List[str]:
         if self.already_exists(backup_item):
             self.logger.warning("Item %s already exists, skipping.", backup_item)
-            return
-        self._save(input_file, backup_item)
-        self.logger.info("[%s] Saved %s", self, backup_item.name)
+            return []
+        try:
+            self._save(input_file, backup_item)
+            self.logger.info("[%s] Saved %s", self, backup_item.name)
+            return []
+        except Exception as exc:
+            self.logger.exception("Something wrong happened when saving %s", backup_item)
+            return [f"Failed saving {backup_item} at {self} ({exc})"]
 
     def delete(self, backup_item: BackupItem):
         self._delete(backup_item)
