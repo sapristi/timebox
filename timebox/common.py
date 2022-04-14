@@ -2,6 +2,7 @@ import abc
 import logging
 import os
 import re
+import subprocess
 from datetime import date, datetime
 from enum import Enum
 from pathlib import Path
@@ -105,3 +106,20 @@ class Compression(str, Enum):
     def extension(self):
         mapping = {"gzip": "gz", "bzip2": "bz2", "lzma": "xz"}
         return mapping[self.value]
+
+
+def truncate(data, max_len):
+    if max_len:
+        if len(data) > max_len:
+            return data[0:max_len] + "\n....[TRUNCATED]"
+
+
+def log_failed_command(
+    logger, command_res: subprocess.CompletedProcess, max_output_len: Optional[int]
+):
+    stdout = truncate(command_res.stdout, max_output_len)
+    stderr = truncate(command_res.stderr, max_output_len)
+    if stdout or stderr:
+        logger.error("Captured output:\nSTDOUT: '%s'\nSTDERR: '%s'")
+    else:
+        logger.error("No outuput.")
