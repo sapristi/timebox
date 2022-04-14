@@ -3,6 +3,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from timebox.notification_providers import NotificationProvider
+
 from .common import BaseModel, t
 from .input_providers import InputProvider
 from .output_providers import OutputProvider
@@ -27,6 +29,7 @@ class Config(BaseModel):
     overwrite: bool = False
     use_secrets: bool = True
     secrets_file: Optional[Path] = None
+    notification: Optional[NotificationProvider] = None
 
 
 class Backup(BaseModel):

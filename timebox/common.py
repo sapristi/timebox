@@ -7,7 +7,7 @@ from datetime import date, datetime
 from enum import Enum
 from pathlib import Path
 from tempfile import TemporaryDirectory, _TemporaryFileWrapper
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import pydantic
 from blessings import Terminal
@@ -123,3 +123,15 @@ def log_failed_command(
         logger.error("Captured output:\nSTDOUT: '%s'\nSTDERR: '%s'")
     else:
         logger.error("No outuput.")
+
+
+class OperationReport(BaseModel):
+    items_ok: List[BackupItem]
+    items_ko: List[Tuple[BackupItem, List[str]]]
+    other_errors: List[str]
+
+    def has_error(self):
+        return bool(self.items_ko or self.other_errors)
+
+    def is_empty(self):
+        return len(self.items_ok) == 0 and len(self.items_ko) == 0 and len(self.other_errors) == 0

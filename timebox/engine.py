@@ -5,7 +5,8 @@ import yaml
 
 from timebox.config import Backup, Config
 
-from .common import BackupItem, TempDir
+from .common import BackupItem, OperationReport, TempDir
+from .format_report import FormattedReport
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +35,13 @@ class Engine:
             for output in backup.outputs:
                 output.set_secrets(secrets)
 
-    def create_backups(self):
+        if self.config.notification is not None:
+            self.config.notification.set_secrets(secrets)
+
+    def perform_backups(self) -> OperationReport:
+        items_ok = []
+        items_ko = []
+
         for backup in self.backups:
             backup_item = BackupItem(name=backup.name, date=self.date)
             try:
@@ -42,11 +49,22 @@ class Engine:
             except Exception as exc:
                 message = f"Failed creating dump for {backup_item} ({exc})"
                 logger.exception(message)
+                items_ko.append((backup_item, [message]))
                 continue
+            backup_errors = []
             for output in backup.outputs:
-                output.save(dump_file, backup_item)
+                errors = output.save(dump_file, backup_item)
+                backup_errors.extend(errors)
+            if backup_errors:
+                items_ko.append((backup_item, backup_errors))
+            else:
+                items_ok.append(backup_item)
+        return OperationReport(items_ok=items_ok, items_ko=items_ko, other_errors=[])
 
-    def rotate_backups(self):
+    def rotate_backups(self) -> OperationReport:
+        other_errors = []
+        items_ok = []
+        items_ko = []
         for backup in self.backups:
             for output in backup.outputs:
                 try:
@@ -54,20 +72,31 @@ class Engine:
                 except Exception as exc:
                     message = f"Failed listing backups in {output} ({exc})"
                     logger.exception(message)
+                    other_errors.append(message)
                     continue
                 for output_item in output_items:
                     if backup.rotation.remaining_days(output_item) == 0:
                         try:
                             output.delete(output_item)
+                            items_ok.append(output_item)
                         except Exception as exc:
                             message = (
                                 f"Failed deleting backup for {output_item} in {output} ({exc})"
                             )
                             logger.exception(message)
+                            items_ko.append((output_item, [message]))
+        return OperationReport(items_ok=items_ok, items_ko=items_ko, other_errors=other_errors)
 
     def run(self):
-        self.create_backups()
-        self.rotate_backups()
+        backup_report = self.perform_backups()
+        rotate_report = self.rotate_backups()
+
+        formatted_report = FormattedReport()
+        formatted_report.add_backup_report(backup_report)
+        formatted_report.add_rotate_report(rotate_report)
+
+        if self.config.notification:
+            self.config.notification.send(formatted_report)
 
     def ls(self):
         for backup in self.backups:
