@@ -2,11 +2,14 @@
 dependencies = [
     "pydantic >= 1.0",
 ]
+name = "timebox"
+version = "0.1"
 
 [project.optional-dependencies]
 dev = [
     "pytest >= 7.0",
-    "pre-commit >= 2.0"
+    "pre-commit >= 2.0",
+    "jinja2"
 ]
 
 [build-system]
