@@ -6,6 +6,8 @@ from .base import RotationBase
 
 
 class SimpleRotation(RotationBase):
+    """Keeps backups the given number of days."""
+
     type: Literal["simple"]
     days: int
 

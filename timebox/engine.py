@@ -21,9 +21,10 @@ class Engine:
 
     def provide_secrets(self):
         if not self.config.use_secrets:
+            logger.info("Not using external secrets.")
             return
         if self.config.secrets_file is None:
-            logger.debug("Fetching secrets from environment.")
+            logger.debug("Fetching secrets from environment only.")
             secrets = {}
         else:
             logger.debug("Fetching secrets from environment and %s.", self.config.secrets_file)

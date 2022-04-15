@@ -8,6 +8,8 @@ from .base import OuputProviderBase
 
 
 class FolderOutputProvider(OuputProviderBase):
+    """Stores backups in the given local folder."""
+
     type: Literal["folder"]
     path: Path
 

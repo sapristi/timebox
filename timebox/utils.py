@@ -74,9 +74,7 @@ def format_size(value):
 #         shutil.copyfileobj(f_in, f_out)
 
 
-def generate_union_parser(union_type):
-    union_type_name = union_type.__name__
-
+def generate_union_parser(union_type, union_type_name):
     def parse_union_type(cls, value):
         if value is None:
             return None
@@ -105,8 +103,8 @@ def generate_union_parser(union_type):
     return parse_union_type
 
 
-def generate_union_parser_list(union_type):
-    parse_union_type = generate_union_parser(union_type)
+def generate_union_parser_list(union_type, union_type_name):
+    parse_union_type = generate_union_parser(union_type, union_type_name)
 
     def parse_union_type_list(cls, value):
         if not isinstance(value, list):

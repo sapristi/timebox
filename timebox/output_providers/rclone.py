@@ -9,6 +9,8 @@ rclone = RClone()
 
 
 class RCloneOutputProvider(OuputProviderBase):
+    """Use rclone to send backups to pre-configured remotes."""
+
     type: Literal["rclone"]
     executable: str = "rclone"
     remote: str

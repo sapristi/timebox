@@ -21,8 +21,16 @@ def interpolate_body(body, to_replace):
 
 
 class WebhookNotificationProvider(NotificationProviderBase):
+    """
+    Executes and HTTP request to the given url.
+
+    The provided `secret` can be used either in the `url`, or in the `headers`: use the string `<SECRET>` as a placeholder.
+
+    The strings `<SUMMARY>` and `<MESSAGE>` can be used as placeholders in the body for the report data.
+    """
+
     type: Literal["webhook"]
-    method: str
+    method: str = "POST"
     url: str
     headers: Dict[str, str] = {}
     body: Dict[str, Any] = {}

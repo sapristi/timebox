@@ -7,6 +7,8 @@ from .base import InputProviderBase
 
 
 class FolderInputProvider(InputProviderBase):
+    """Creates a tar archive from a given folder."""
+
     _skip_compress = True
 
     type: Literal["folder"]

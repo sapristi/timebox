@@ -7,6 +7,8 @@ from .base import NotificationProviderBase
 
 
 class CommandNotificationProvider(NotificationProviderBase):
+    """Run a system command. `SUMMARY`, `MESSAGE` and `HAS_ERROR` are provided as environment variables."""
+
     type: Literal["command"]
     command: List[str]
 
