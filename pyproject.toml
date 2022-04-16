@@ -2,7 +2,7 @@
 dependencies = [
     "pydantic >= 1.0",
 ]
-name = "timebox"
+name = "backup_timebox"
 version = "0.1"
 
 [project.optional-dependencies]
