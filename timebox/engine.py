@@ -1,18 +1,19 @@
 import logging
 from datetime import datetime
+from typing import List
 
 import yaml
 
 from timebox.config import Backup, Config
 
-from .common import BackupItem, OperationReport, TempDir
+from .common import BackupItem, LsReport, OperationReport, TempDir
 from .format_report import FormattedReport
 
 logger = logging.getLogger(__name__)
 
 
 class Engine:
-    def __init__(self, backups: list[Backup], config: Config):
+    def __init__(self, backups: List[Backup], config: Config):
         self.backups = backups
         self.config = config
         self.date = datetime.now().replace(microsecond=0)
@@ -21,9 +22,10 @@ class Engine:
 
     def provide_secrets(self):
         if not self.config.use_secrets:
+            logger.info("Not using external secrets.")
             return
         if self.config.secrets_file is None:
-            logger.debug("Fetching secrets from environment.")
+            logger.debug("Fetching secrets from environment only.")
             secrets = {}
         else:
             logger.debug("Fetching secrets from environment and %s.", self.config.secrets_file)
@@ -99,13 +101,18 @@ class Engine:
             self.config.notification.send(formatted_report)
 
     def ls(self):
+        items = {}
+        errors = []
         for backup in self.backups:
+            items[backup.name] = {}
             for output in backup.outputs:
                 try:
                     output_items = output.ls(backup.name)
-                except Exception:
+                except Exception as exc:
                     logger.exception("Failed listing backups in %s", output)
+                    errors.append(str(exc))
                     continue
-                print(f"Items for output {output}")
-                for item in output_items:
-                    print(f"\t{item}: {backup.rotation.remaining_days(item)} remaining days.")
+                items[backup.name][str(output)] = [
+                    (item, backup.rotation.remaining_days(item)) for item in output_items
+                ]
+        return LsReport(items=items, errors=errors)

@@ -1,0 +1,11 @@
+backups:
+  my_data:
+    input:
+      type: folder
+      path: /my/data
+    outputs:
+      - type: folder
+        path: /tmp
+    rotation:
+      type: simple
+      days: 2

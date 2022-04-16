@@ -30,12 +30,13 @@ class BaseModel(pydantic.BaseModel):
 class BackupItem(BaseModel):
     name: str
     date: date
-    extensions: List[str] = []
+    extensions: List[str] = pydantic.Field(default_factory=list)
     size: Optional[int] = None
 
     @staticmethod
     def from_filename(filename, size=None):
-        if match := re.match(filename_regex, filename):
+        match = re.match(filename_regex, filename)
+        if match:
             item_date = datetime.strptime(match.group("date"), date_format).date()
             extensions = [ext for ext in match.group("extensions").split(".") if ext]
             return BackupItem(
@@ -51,12 +52,14 @@ class BackupItem(BaseModel):
     def age(self) -> int:
         return (date.today() - self.date).days
 
-    def __str__(self):
+    @property
+    def size_str(self):
         if self.size is None:
-            size_str = ""
-        else:
-            size_str = f" ({format_size(self.size)})"
-        return f"[{self.name} on {self.date}{size_str}]"
+            return "unknown size"
+        return f"{format_size(self.size)}"
+
+    def __str__(self):
+        return f"[{self.name} on {self.date} ({self.size_str})]"
 
 
 class ProviderCommon(BaseModel, abc.ABC):
@@ -135,3 +138,8 @@ class OperationReport(BaseModel):
 
     def is_empty(self):
         return len(self.items_ok) == 0 and len(self.items_ko) == 0 and len(self.other_errors) == 0
+
+
+class LsReport(BaseModel):
+    items: Dict[str, Dict[str, List[Tuple[BackupItem, int]]]]
+    errors: List[str]

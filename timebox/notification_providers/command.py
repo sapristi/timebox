@@ -1,5 +1,7 @@
 import subprocess
-from typing import List, Literal
+from typing import List
+
+from typing_extensions import Literal
 
 from timebox.format_report import FormattedReport
 
@@ -7,6 +9,8 @@ from .base import NotificationProviderBase
 
 
 class CommandNotificationProvider(NotificationProviderBase):
+    """Run a system command. `SUMMARY`, `MESSAGE` and `HAS_ERROR` are provided as environment variables."""
+
     type: Literal["command"]
     command: List[str]
 

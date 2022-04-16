@@ -1,5 +1,6 @@
 from pathlib import Path
-from typing import Literal
+
+from typing_extensions import Literal
 
 from ..common import BackupItem
 from ..rclone import RClone
@@ -9,6 +10,8 @@ rclone = RClone()
 
 
 class RCloneOutputProvider(OuputProviderBase):
+    """Use rclone to send backups to pre-configured remotes."""
+
     type: Literal["rclone"]
     executable: str = "rclone"
     remote: str
@@ -24,7 +27,7 @@ class RCloneOutputProvider(OuputProviderBase):
         return f"{self.remote}:{self.path / dest}"
 
     def _save(self, input_file, backup_item):
-        self.rclone.copy(str(input_file), self.path_to(backup_item.filename))
+        self.rclone.copyto(str(input_file), self.path_to(backup_item.filename))
 
     def _ls_all(self):
         items = self.rclone.lsjson(self.path_to())

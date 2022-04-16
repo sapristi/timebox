@@ -1,4 +1,4 @@
-from typing import Literal
+from typing_extensions import Literal
 
 from timebox.common import BackupItem
 
@@ -6,6 +6,8 @@ from .base import RotationBase
 
 
 class SimpleRotation(RotationBase):
+    """Keeps backups the given number of days."""
+
     type: Literal["simple"]
     days: int
 

@@ -15,3 +15,13 @@ repos:
     -   id: isort
         files: "\\.(py)$"
         args: [--settings-path=pyproject.toml]
+- repo: local
+  hooks:
+    - id: providers_doc
+      name: providers_doc
+      entry: bash -c "diff -B docs/providers.md <(python scripts/generate_documentation.py providers)"
+      language: system
+    - id: main_doc
+      name: main_doc
+      entry: bash -c "diff -B docs/main.md <(python scripts/generate_documentation.py main)"
+      language: system

@@ -1,5 +1,6 @@
 from datetime import date, datetime
-from typing import Literal
+
+from typing_extensions import Literal
 
 from timebox.common import BackupItem
 
@@ -14,6 +15,8 @@ def compute_duration(start: int, base: int):
 
 
 class DecayingRotation(RotationBase):
+    """Keeps backups in a decaying fashion, allowing to cover a long timespan with a small number of backups."""
+
     type: Literal["decaying"]
     offset: int = 0
     base: int

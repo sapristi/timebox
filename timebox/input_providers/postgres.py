@@ -1,13 +1,16 @@
 import subprocess
-from typing import Literal, Optional
+from typing import Optional
 
 from pydantic import Field
+from typing_extensions import Literal
 
 from ..common import BackupItem, TempDir
 from .base import InputProviderBase
 
 
 class PostgresInputProvider(InputProviderBase):
+    """Dumps the given postgres database."""
+
     type: Literal["postgres"]
     database: str
     host: Optional[str] = None
