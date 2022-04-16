@@ -1,0 +1,28 @@
+backups:
+  my_db:
+    input:
+      type: postgres
+      database: my_db
+    outputs:
+      - type: rclone
+        remote: my_bucket
+        path: /my/db
+    rotation:
+      type: simple
+      days: 10
+
+config:
+  log_level: INFO
+  notification:
+    type: webhook
+    method: Post
+    url: https://discord.com/api/channels/90CHANNEL_ID0458/messages
+    headers:
+      Authorization: Bot <SECRET>
+    body:
+      content: |
+        **<SUMMARY>**
+
+        <MESSAGE>
+    secret: DISCORD_BOT_TOKEN
+
