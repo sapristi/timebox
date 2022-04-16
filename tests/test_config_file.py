@@ -15,3 +15,4 @@ def test_config_files(config_file):
         f_data = yaml.load(f.read(), Loader=yaml.Loader)
     config_file = ConfigFile.parse_obj(f_data)
     config_file.parse_backups()
+    assert isinstance(config_file.config.log_level, str)

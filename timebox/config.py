@@ -28,7 +28,7 @@ class Config(BaseModel):
         use_enum_values = True
 
     log_level: LogLevel = Field(
-        LogLevel.WARNING,
+        LogLevel.WARNING.value,
         doc_type="|".join(item for item in LogLevel.__members__),
     )
     secrets_file: Optional[Path] = Field(None, doc_help="Path to a file containing secret values.")
