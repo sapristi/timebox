@@ -48,7 +48,17 @@ def main():
     if args.command == "run":
         engine.run()
     if args.command == "ls":
-        engine.ls()
+        ls_report = engine.ls()
+        for backup, outputs_data in ls_report.items.items():
+            print(f"{t.bold}Backup {backup}:{t.normal}")
+            for output, backup_items in outputs_data.items():
+                print(f"\t{output}")
+                if len(backup_items) == 0:
+                    print(f"\t\tNothing here.")
+                for (item, remaining_days) in backup_items:
+                    print(
+                        f"\t\t{item.filename}: ({item.age} days old; {remaining_days} remaining days) - {item.size_str}"
+                    )
 
 
 if __name__ == "__main__":
