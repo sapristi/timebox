@@ -30,7 +30,7 @@ class BaseModel(pydantic.BaseModel):
 class BackupItem(BaseModel):
     name: str
     date: date
-    extensions: List[str] = []
+    extensions: List[str] = pydantic.Field(default_factory=list)
     size: Optional[int] = None
 
     @staticmethod
