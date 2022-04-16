@@ -21,8 +21,8 @@ Timebox is configured with a yaml file. The file can have two top-level fields:
   Path to a file containing secret values.
 - notification[NotificationProvider] (default: None) 
   Specify which provider will be used to send notifications.
-- use_secrets[boolean] (default: False) 
-  Disables using external secrets. Secret values should be directly provided in the config file.
+- use_secrets[boolean] (default: True) 
+  If set to False, secret values should be directly provided in the config file.
 
 ## Providers 
 

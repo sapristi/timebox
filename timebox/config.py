@@ -38,8 +38,8 @@ class Config(BaseModel):
         doc_help="Specify which provider will be used to send notifications.",
     )
     use_secrets: bool = Field(
-        False,
-        doc_help="Disables using external secrets. Secret values should be directly provided in the config file.",
+        True,
+        doc_help="If set to False, secret values should be directly provided in the config file.",
     )
 
     parse_notification = validator("notification", pre=True, allow_reuse=True)(
