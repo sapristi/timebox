@@ -5,11 +5,16 @@ import yaml
 
 from timebox.config import ConfigFile
 
-example_config_files_folder = Path("tests/data/config_files")
-example_config_files = [f for f in example_config_files_folder.iterdir() if f.is_file()]
+config_files_folders = [Path("tests/data/config_files"), Path("config_examples")]
+config_files = [
+    f
+    for config_files_folder in config_files_folders
+    for f in config_files_folder.iterdir()
+    if f.is_file()
+]
 
 
-@pytest.mark.parametrize("config_file", example_config_files)
+@pytest.mark.parametrize("config_file", config_files)
 def test_config_files(config_file):
     with open(config_file) as f:
         f_data = yaml.load(f.read(), Loader=yaml.Loader)

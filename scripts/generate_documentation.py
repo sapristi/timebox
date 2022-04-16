@@ -95,7 +95,7 @@ def generate_providers_documentation():
 def generate_main_documentation():
     main_template = setup_template("main.md")
 
-    examples_dir = Path("./tests/data/config_files")
+    examples_dir = Path("./config_examples")
     examples = [(f.name, f.read_text()) for f in examples_dir.iterdir() if f.is_file()]
 
     res = main_template.render(backup_type=Backup, config_type=Config, examples=examples)

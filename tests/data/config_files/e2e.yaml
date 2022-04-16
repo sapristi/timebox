@@ -1,11 +1,11 @@
-items:
-  - name: test
+backups:
+  test:
     input:
       type: folder
-      path: tests/input
+      path: ./tests/data
     outputs:
       - type: folder
-        path: tests/output2
+        path: /tmp
     rotation:
       type: simple
       days: 2
