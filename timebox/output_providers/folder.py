@@ -1,7 +1,8 @@
 import os
 import shutil
 from pathlib import Path
-from typing import Literal
+
+from typing_extensions import Literal
 
 from ..common import BackupItem
 from .base import OuputProviderBase

@@ -1,9 +1,9 @@
 import smtplib
 import ssl
 from email.message import EmailMessage
-from typing import Literal
 
 from pydantic.fields import Field
+from typing_extensions import Literal
 
 from timebox.format_report import FormattedReport
 

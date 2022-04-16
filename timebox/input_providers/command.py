@@ -1,8 +1,9 @@
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Literal, Optional
+from typing import Dict, List, Optional
 
 from pydantic.fields import Field
+from typing_extensions import Literal
 
 from ..common import BackupItem, TempDir, log_failed_command
 from .base import InputProviderBase

@@ -1,6 +1,7 @@
 import tarfile
 from pathlib import Path
-from typing import Literal
+
+from typing_extensions import Literal
 
 from ..common import BackupItem, TempDir
 from .base import InputProviderBase

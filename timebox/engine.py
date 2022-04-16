@@ -1,5 +1,6 @@
 import logging
 from datetime import datetime
+from typing import List
 
 import yaml
 
@@ -12,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class Engine:
-    def __init__(self, backups: list[Backup], config: Config):
+    def __init__(self, backups: List[Backup], config: Config):
         self.backups = backups
         self.config = config
         self.date = datetime.now().replace(microsecond=0)

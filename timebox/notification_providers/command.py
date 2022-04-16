@@ -1,5 +1,7 @@
 import subprocess
-from typing import List, Literal
+from typing import List
+
+from typing_extensions import Literal
 
 from timebox.format_report import FormattedReport
 

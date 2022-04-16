@@ -35,7 +35,8 @@ class BackupItem(BaseModel):
 
     @staticmethod
     def from_filename(filename, size=None):
-        if match := re.match(filename_regex, filename):
+        match = re.match(filename_regex, filename)
+        if match:
             item_date = datetime.strptime(match.group("date"), date_format).date()
             extensions = [ext for ext in match.group("extensions").split(".") if ext]
             return BackupItem(

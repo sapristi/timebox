@@ -1,5 +1,6 @@
 from datetime import date, datetime
-from typing import Literal
+
+from typing_extensions import Literal
 
 from timebox.common import BackupItem
 

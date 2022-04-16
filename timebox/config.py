@@ -53,7 +53,7 @@ class Backup(BaseModel):
         doc_help="Unique name used to identify this backup. Inferred from the `backups` mapping.",
     )
     input: InputProvider = Field(..., doc_type="InputProvider")
-    outputs: list[OutputProvider] = Field(..., doc_type="List[OutputProvider]")
+    outputs: List[OutputProvider] = Field(..., doc_type="List[OutputProvider]")
     rotation: RotationProvider = Field(..., doc_type="RotationProvider")
 
     parse_input = validator("input", pre=True, allow_reuse=True)(

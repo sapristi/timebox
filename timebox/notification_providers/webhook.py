@@ -1,9 +1,10 @@
 from functools import reduce
-from typing import Any, Dict, Literal, Optional
+from typing import Any, Dict, Optional
 
 import requests
 from pydantic.fields import Field
 from requests.exceptions import HTTPError
+from typing_extensions import Literal
 
 from timebox.format_report import FormattedReport
 
