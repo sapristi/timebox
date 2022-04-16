@@ -110,6 +110,16 @@ class RClone:
         """
         return self.run_cmd(command="copy", extra_args=[source] + [dest] + flags)
 
+    def copyto(self, source: str, dest: str, flags=[]):
+        """
+        Executes: rclone copyto source:path dest:path [flags]
+        Args:
+        - source (string): A string "source:path"
+        - dest (string): A string "dest:path"
+        - flags (list): Extra flags as per `rclone copy --help` flags.
+        """
+        return self.run_cmd(command="copyto", extra_args=[source] + [dest] + flags)
+
     def sync(self, source: str, dest: str, flags=[]):
         """
         Executes: rclone sync source:path dest:path [flags]
