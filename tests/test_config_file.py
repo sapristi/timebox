@@ -10,7 +10,7 @@ config_files = [
     f
     for config_files_folder in config_files_folders
     for f in config_files_folder.iterdir()
-    if f.is_file()
+    if f.is_file() and f.suffix in [".yaml", ".yml"]
 ]
 
 

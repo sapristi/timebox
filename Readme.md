@@ -6,6 +6,10 @@ Timebox aims to stay simple, straightforward, and unobtrusive.
  - The backup files are stored as is, which means you don't need timebox to retrieve them (this also means no incremental backup).
  - It does not rely on any kind of database. All necessary metadata are stored in the filenames.
 
+Implementation wise, the goal is to 
+ - provide a wrapper around existing commands.
+ - provide an easily extensible system.
+ 
 ## How to use
 
 ### Configuration
@@ -19,19 +23,42 @@ backups:
       type: postgres
       username: user
       database: my_db
+      password: DB_PWD
     outputs:
       - type: folder
         path: /data/backups
     rotation:
       type: simple
       days: 30
+config:
+  secrets_file: .secrets
+  notification:
+    type: webhook
+    method: Post
+    url: https://discord.com/api/channels/908MYCHANNEL458/messages
+    secret: DISCORD_BOT_TOKEN
+    headers:
+      Authorization: Bot <SECRET>
+    body:
+      content: |
+        **<SUMMARY>**
+
+        <MESSAGE>
 ```
 
 Here you can see a configuration with a single backup. 
  - It takes as input a postgres database.
  - It has a single output, the local `/data/backups` folder.
  - Files will be kept for 30 days.
- 
+ - the file `.secrets` will be read to fetch sensitive values (`DB_PWD` and `DISCORD_BOT_TOKEN`)
+ - once the backup is done, the webhook will be triggerd, posting a message on discord
+
+The `.secrets` file is parsed with the [`python-dotenv`](https://pypi.org/project/python-dotenv/) package; it's content could be e.g. 
+```
+DB_PWD=my_very_long_db_pwd
+DISCORD_BOT_TOKEN=2d1BfqacR9SPLUiXfo4mMHwVn2IR4Kv208O8tZ2q
+```
+
 See also:
 - **[the config file documentation](/docs/main.md)**
 - **[the providers documentation](/docs/providers.md)**
@@ -43,6 +70,8 @@ Timebox expects to be called daily for performing backups: `timebox -c /path/to/
 You can also list files stored on the configured outputs:  `timebox -c /path/to/config.yaml ls`.
 
 **Note***: the `rclone` output provider expects `rclone` to be already installed and configured.
+
+Secret values will be fetched from the (optional) `secrets_file`, as well as from environment variables.
 
 # Why another backup manager ?
 

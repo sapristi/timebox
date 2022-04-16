@@ -2,7 +2,7 @@ import logging
 from datetime import datetime
 from typing import List
 
-import yaml
+from dotenv import dotenv_values
 
 from timebox.config import Backup, Config
 
@@ -29,8 +29,9 @@ class Engine:
             secrets = {}
         else:
             logger.debug("Fetching secrets from environment and %s.", self.config.secrets_file)
-            with open(self.config.secrets_file) as f:
-                secrets = yaml.load(f.read(), Loader=yaml.Loader)
+            secrets = {
+                k: v for k, v in dotenv_values(self.config.secrets_file).items() if v is not None
+            }
 
         for backup in self.backups:
             backup.input.set_secrets(secrets)

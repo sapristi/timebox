@@ -60,7 +60,7 @@ class Backup(BaseModel):
         generate_union_parser(InputProvider, "InputProvider")
     )
     parse_outputs = validator("outputs", pre=True, allow_reuse=True)(
-        generate_union_parser_list(OutputProvider, "OutputProvide")
+        generate_union_parser_list(OutputProvider, "OutputProvider")
     )
     parse_rotation = validator("rotation", pre=True, allow_reuse=True)(
         generate_union_parser(RotationProvider, "RotationProvider")
