@@ -22,10 +22,11 @@ def load_config_file(config_file):
         config_data = yaml.load(f.read(), Loader=yaml.Loader)
     try:
         return ConfigFile.parse_obj(config_data).parse_backups()
-    except Exception:
+    except Exception as exc:
         print(
             f"{t.red + t.bold}ERROR{t.normal}: Parsing of config file {t.bold}{config_file}{t.normal} failed.\n"
         )
+        print(exc)
         exit(1)
 
 

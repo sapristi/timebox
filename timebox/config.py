@@ -31,9 +31,6 @@ class PostOp(BaseModel):
 
 
 class Config(BaseModel):
-    class Config:
-        use_enum_values = True
-
     log_level: LogLevel = Field(
         LogLevel.WARNING.value,
         doc_type="|".join(item for item in LogLevel.__members__),
@@ -49,13 +46,14 @@ class Config(BaseModel):
         doc_help="If set to False, secret values should be directly provided in the config file.",
     )
 
-    parse_notification = validator("notification", pre=True, allow_reuse=True)(
-        generate_union_parser(NotificationProvider, "NotificationProvider")
-    )
     post_ops: Dict[str, PostOp] = Field(
         default_factory=dict,
         doc_type="Dict[str, PostOp]",
         doc_help="Definitions for additional commands used to transform the backup (like compression, encryption,...)",
+    )
+
+    parse_notification = validator("notification", pre=True, allow_reuse=True)(
+        generate_union_parser(NotificationProvider, "NotificationProvider")
     )
 
 
