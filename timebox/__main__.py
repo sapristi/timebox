@@ -56,7 +56,7 @@ def main():
                 print(f"\t{output}")
                 if len(backup_items) == 0:
                     print(f"\t\tNothing here.")
-                for (item, remaining_days) in backup_items:
+                for (item, remaining_days) in sorted(backup_items, key=lambda i: i[0].age):
                     print(
                         f"\t\t{item.filename}: ({item.age} days old; {remaining_days} remaining days) - {item.size_str}"
                     )
