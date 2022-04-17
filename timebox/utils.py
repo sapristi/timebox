@@ -76,8 +76,8 @@ def format_size(value):
 
 def generate_union_parser(union_type, union_type_name):
     def parse_union_type(cls, value):
-        if value is None:
-            return None
+        if not isinstance(value, dict):
+            return value
         try:
             target_type = value.get("type")
         except Exception:

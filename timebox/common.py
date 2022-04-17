@@ -99,16 +99,19 @@ class TempDir:
         self.tempdir.cleanup()
 
 
-# unused for now
-class Compression(str, Enum):
+class CompressionAlgo(str, Enum):
     gzip = "gzip"
     bzip2 = "bzip2"
-    lzma = "lzma"
+    xz = "xz"
 
     @property
     def extension(self):
-        mapping = {"gzip": "gz", "bzip2": "bz2", "lzma": "xz"}
+        mapping = {"gzip": "gz", "bzip2": "bz2", "xz": "xz"}
         return mapping[self.value]
+
+    @staticmethod
+    def get_doc():
+        return "|".join(CompressionAlgo.__members__.values())
 
 
 def truncate(data, max_len):

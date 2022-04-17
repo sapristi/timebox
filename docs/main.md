@@ -7,22 +7,36 @@ Timebox is configured with a yaml file. The file can have two top-level fields:
 ## Backup
 
 
-- name[string] **required** 
+- name[`string`] **required** 
   Unique name used to identify this backup. Inferred from the `backups` mapping.
-- input[InputProvider] **required** 
-- outputs[List[OutputProvider]] **required** 
-- rotation[RotationProvider] **required** 
+- input[`InputProvider`] **required** 
+- outputs[`List[OutputProvider]`] **required** 
+- rotation[`RotationProvider`] **required** 
+- post_ops[`List[str]`] (default: `None`) 
 
 ## Config
 
 
-- log_level[DEBUG|INFO|WARNING|ERROR] (default: WARNING) 
-- secrets_file[string] (default: None) 
+- log_level[`DEBUG|INFO|WARNING|ERROR`] (default: `WARNING`) 
+- secrets_file[`string`] (default: `None`) 
   Path to a file containing secret values.
-- notification[NotificationProvider] (default: None) 
+- notification[`NotificationProvider`] (default: `None`) 
   Specify which provider will be used to send notifications.
-- use_secrets[boolean] (default: True) 
+- use_secrets[`boolean`] (default: `True`) 
   If set to False, secret values should be directly provided in the config file.
+- post_ops[`Dict[str, PostOp]`] (default: `None`) 
+  Definitions for additional commands used to transform the backup (like compression, encryption,...)
+
+## PostOp
+
+Post operations are program to which the data creted by InputProviders is piped to. Most common usage are compression and encryption.
+
+
+- command[`array`] **required** 
+  Command to run. Should take input from stdin, and output result to stdout.
+- extension[`string`] **required** 
+  Extension to add to the backup files.
+
 
 ## Providers 
 
@@ -63,6 +77,8 @@ backups:
     rotation:
       type: simple
       days: 10
+    post_ops:
+      - compress
 
 config:
   log_level: INFO
@@ -78,6 +94,10 @@ config:
 
         <MESSAGE>
     secret: DISCORD_BOT_TOKEN
+  post_ops:
+    compress:
+      command: [xz]
+      extension: xz
 
 
 ```

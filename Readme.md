@@ -7,7 +7,7 @@ Timebox aims to stay simple, straightforward, and unobtrusive.
  - It does not rely on any kind of database. All necessary metadata are stored in the filenames.
 
 Implementation wise, the goal is to 
- - provide a wrapper around existing commands.
+ - provide a wrapper around existing system commands.
  - provide an easily extensible system.
  
 ## How to use

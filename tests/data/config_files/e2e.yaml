@@ -9,3 +9,5 @@ backups:
     rotation:
       type: simple
       days: 2
+config:
+  log_level: DEBUG
