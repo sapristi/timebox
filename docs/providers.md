@@ -16,7 +16,10 @@ Creates a tar archive from a given folder.
 
 - type = "folder"
 - path[`string`] **required** 
-- compression[`boolean`] *(default: `True`)* 
+  Path to the folder to compress.
+- compression[`gzip|bzip2|xz`] *(default: `xz`)* 
+- exclude[`array`] *(default: `None`)* 
+- extra_args[`array`] *(default: `None`)* 
 
 ### PostgresInputProvider
 
@@ -24,12 +27,10 @@ Dumps the given postgres database.
 
 - type = "postgres"
 - database[`string`] **required** 
-- compression[`boolean`] *(default: `True`)* 
 - host[`string`] *(default: `None`)* 
 - username[`string`] *(default: `None`)* 
 - port[`string`] *(default: `None`)* 
 - password[`string`] *(default: `None`)* *Secret*
-- executable[`string`] *(default: `/usr/bin/pg_dump`)* 
 
 ### CommandInputProvider
 
@@ -37,7 +38,6 @@ Runs the given command. Use the `DESTFILE` environment variable as the target fi
 
 - type = "command"
 - command[`array`] **required** 
-- compression[`boolean`] *(default: `True`)* 
 - extension[`string`] *(default: `None`)* 
   Extension to associate with created files.
 - secret[`string`] *(default: `None`)* *Secret*

@@ -3,7 +3,7 @@ from pathlib import Path
 
 import jinja2
 
-from timebox.config import Backup, Config
+from timebox.config import Backup, Config, PostOp
 from timebox.input_providers import InputProvider
 from timebox.notification_providers import NotificationProvider
 from timebox.output_providers import OutputProvider
@@ -98,7 +98,9 @@ def generate_main_documentation():
     examples_dir = Path("./config_examples")
     examples = [(f.name, f.read_text()) for f in examples_dir.iterdir() if f.is_file()]
 
-    res = main_template.render(backup_type=Backup, config_type=Config, examples=examples)
+    res = main_template.render(
+        backup_type=Backup, config_type=Config, postop_type=PostOp, examples=examples
+    )
     return res
 
 

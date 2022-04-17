@@ -10,6 +10,8 @@ backups:
     rotation:
       type: simple
       days: 10
+    post_ops:
+      - compress
 
 config:
   log_level: INFO
@@ -25,4 +27,8 @@ config:
 
         <MESSAGE>
     secret: DISCORD_BOT_TOKEN
+  post_ops:
+    compress:
+      command: [xz]
+      extension: xz
 

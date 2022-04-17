@@ -8,6 +8,7 @@ from timebox.config import Backup, Config
 
 from .common import BackupItem, LsReport, OperationReport, TempDir
 from .format_report import FormattedReport
+from .pipe import run_piped_commands
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +49,12 @@ class Engine:
         for backup in self.backups:
             backup_item = BackupItem(name=backup.name, date=self.date)
             try:
-                dump_file = backup.input.dump(self.tempdir, backup_item)
+                dump_file = self.tempdir.get_temp_filepath()
+                command, env = backup.input.get_command(backup_item)
+                post_ops = [self.config.post_ops[post_op_name] for post_op_name in backup.post_ops]
+                commands = [command, *[post_op.command for post_op in post_ops]]
+                backup_item.extensions.extend([post_op.extension for post_op in post_ops])
+                run_piped_commands(commands, env, dump_file)
             except Exception as exc:
                 message = f"Failed creating dump for {backup_item} ({exc})"
                 logger.exception(message)
