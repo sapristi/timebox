@@ -10,9 +10,23 @@ Implementation wise, the goal is to
  - provide a wrapper around existing system commands.
  - provide an easily extensible system.
 
-## Features
+## Features comparison
 
- - Run 
+Here's a feature comparison table with other open-source backup software:
+
+|                                                     | Running mode        | Supported platforms   | Incremental backups | Stateful | Data source                   | Encryption | Integrated scheduler | Centralised configuration |
+|----------------------------------------------------:|---------------------|-----------------------|---------------------|----------|-------------------------------|------------|----------------------|---------------------------|
+| timebox                                             | Cli program         | Linux                 |                ❌ No | ❌ No     | Local data, custom commands   | ✅ Yes      | ❌ No                 | ✅ Yes                     |
+| [blackbox](https://github.com/lemonsaurus/blackbox) | Cli program         | Linux                 | ❌ No                | ❌ No     | Local data, various databases | ❌ No       | ❌ No                 | ✅ Yes                     |
+| [duplicati](https://github.com/duplicati/duplicati) | Web server/ui + Cli | Linux, MacOS, Windows | ✅ Yes               | ✅ Yes    | Local data                    | ✅ Yes      | ✅ Yes                | ✅ Yes                     |
+| [restic](https://github.com/restic/restic)          | Cli program         | Linux, MacOS, Windows | ✅ Yes               | ✅ Yes    | Local data, stdin             | ✅ Yes      | ❌ No                 | ❌ No                      |
+
+**Notes**:
+ - Supported storage backends is not included here, because there are so many of them, and also `rclone` does an amazing job of taking that burden away anyway.
+ - The main difference `timebox` has with other backup managers is how *flexible* it is considering datasources, and post-operations, such as compression and encryption, by allowing to reuse existing programs.
+ - Incremental backups is most useful if you want to backup big directories.
+
+Note 
 
 ## Installation
 
@@ -73,7 +87,7 @@ Here you can see a configuration with a single backup.
 The `.secrets` file is parsed with the [`python-dotenv`](https://pypi.org/project/python-dotenv/) package; it's content could be e.g. 
 ```
 DB_PWD=my_very_long_db_pwd
-DISCORD_BOT_TOKEN=2d1BfqacR9SPLUiXfo4mMHwVn2IR4Kv208O8tZ2q
+DISCORD_BOT_TOKEN=ThISISnotAreaLToKENacR9SPLUiXfo4mMHwVn2IR4Kv208O8tZ2q
 ```
 
 See also:
@@ -99,7 +113,7 @@ This project's name took inspiration from [blackbox](https://github.com/lemonsau
 
 ## Decaying rotation
 
-The idea around decaying rotation is to keep a minimal number of backups, while keeping a long backup period. To do so, we have to keep some backups for a long time, while other will be short lived. This might be especially usefull when performing a backup of personal files, where you might realise you have deleted something usefull only a long time after the deletion has occured.
+The idea around decaying rotation is to keep a minimal number of backups, while keeping a long backup period. To do so, we have to keep some backups for a long time, while other will be short lived. This might be especially useful when performing a backup of personal files, where you might realise you have deleted something useful only a long time after the deletion has occured.
 
 ### Implementation
 
