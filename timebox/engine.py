@@ -84,7 +84,7 @@ class Engine:
                     other_errors.append(message)
                     continue
                 for output_item in output_items:
-                    if backup.rotation.remaining_days(output_item) == 0:
+                    if backup.rotation.remaining_days(output_item) <= 0:
                         try:
                             output.delete(output_item)
                             items_ok.append(output_item)
