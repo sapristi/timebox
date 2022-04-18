@@ -9,7 +9,17 @@ Timebox aims to stay simple, straightforward, and unobtrusive.
 Implementation wise, the goal is to 
  - provide a wrapper around existing system commands.
  - provide an easily extensible system.
- 
+
+## Features
+
+ - Run 
+
+## Installation
+
+The package is available on pypi.org under the name `backup-timebox`. Supported python versions are `3.7` and newer.
+
+To install it, run `pip install backup-timebox`.
+
 ## How to use
 
 ### Configuration
@@ -30,6 +40,8 @@ backups:
     rotation:
       type: simple
       days: 30
+    post_ops:
+      - compress
 config:
   secrets_file: .secrets
   notification:
@@ -44,10 +56,15 @@ config:
         **<SUMMARY>**
 
         <MESSAGE>
+  post_ops:
+    compress:
+      command: [xz]
+      extension: xz
 ```
 
 Here you can see a configuration with a single backup. 
  - It takes as input a postgres database.
+ - The database dump will be compressed using the `xz` command.
  - It has a single output, the local `/data/backups` folder.
  - Files will be kept for 30 days.
  - the file `.secrets` will be read to fetch sensitive values (`DB_PWD` and `DISCORD_BOT_TOKEN`)
@@ -106,3 +123,11 @@ This gives us a rotation strategy with the following property:
 - At all time, you have exactly *(base + 2)* backup files.
 
 To give a practical example, you can have backups that span at least 256 days (and at most 512), while having only 10 backup files !
+
+# Roadmap
+
+ - Add a "days" / "weeks" / "months" / "years" rotation provider.
+ - Add alert mechanism on space usage.
+ - Add a way to retrieve backups locally.
+   - Need a "reverse" command for transformers.
+ - Host rclone configuration in config file.
