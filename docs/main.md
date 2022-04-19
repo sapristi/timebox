@@ -20,6 +20,8 @@ Timebox is configured with a yaml file. The file can have two top-level fields:
 - log_level[`DEBUG|INFO|WARNING|ERROR`] (default: `WARNING`) 
 - secrets_file[`string`] (default: `None`) 
   Path to a file containing secret values.
+- secrets_directory[`string`] (default: `None`) 
+  Path to a directory containing docker-like secret files.
 - notification[`NotificationProvider`] (default: `None`) 
   Specify which provider will be used to send notifications.
 - use_secrets[`boolean`] (default: `True`) 

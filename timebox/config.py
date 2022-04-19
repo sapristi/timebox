@@ -36,6 +36,9 @@ class Config(BaseModel):
         doc_type="|".join(item for item in LogLevel.__members__),
     )
     secrets_file: Optional[Path] = Field(None, doc_help="Path to a file containing secret values.")
+    secrets_directory: Optional[Path] = Field(
+        None, doc_help="Path to a directory containing docker-like secret files."
+    )
     notification: Optional[NotificationProvider] = Field(
         None,
         doc_type="NotificationProvider",

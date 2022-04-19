@@ -25,14 +25,24 @@ class Engine:
         if not self.config.use_secrets:
             logger.info("Not using external secrets.")
             return
-        if self.config.secrets_file is None:
-            logger.debug("Fetching secrets from environment only.")
-            secrets = {}
-        else:
-            logger.debug("Fetching secrets from environment and %s.", self.config.secrets_file)
-            secrets = {
+        secrets = {}
+
+        if self.config.secrets_directory is not None:
+            secret_files = [f for f in self.config.secrets_directory.iterdir() if f.is_file()]
+            secrets_directory_secrets = {f.name: f.read_text() for f in secret_files}
+            logger.debug(
+                "Fetched secrets %s from secrets directory", list(secrets_directory_secrets.keys())
+            )
+            secrets.update(secrets_directory_secrets)
+
+        if self.config.secrets_file is not None:
+            secrets_file_secrets = {
                 k: v for k, v in dotenv_values(self.config.secrets_file).items() if v is not None
             }
+            logger.debug(
+                "Fetched secrets %s from secrets file.", list(secrets_file_secrets.keys())
+            )
+            secrets.update(secrets_file_secrets)
 
         for backup in self.backups:
             backup.input.set_secrets(secrets)
