@@ -10,6 +10,20 @@ Implementation wise, the goal is to
  - provide a wrapper around existing system commands.
  - provide an easily extensible system.
 
+## Installation
+
+The package is available on pypi.org under the name `backup-timebox`. Supported python versions are `3.7` and newer.
+
+To install it, run `pip install backup-timebox`.
+
+### External dependencies
+ 
+Timebox relies on 
+ - `bash` to combine commands with pipes.
+ - [`rclone`]((https://rclone.org/)) for the [RCloneOutputProvider](/docs/providers.md#rcloneoutputprovider).
+ - `pg_dump` for the [PostgresInputProvider](/docs/providers.md#rcloneoutputprovider)
+ - Any other program you might want to use in the [CommandInputProvider](/docs/providers.md#commandinputprovider) or as a [PostOp](/docs/main.md#postop)
+
 ## Features comparison
 
 Here's a feature comparison table with other open-source backup software:
@@ -26,13 +40,7 @@ Here's a feature comparison table with other open-source backup software:
  - The main difference `timebox` has with other backup managers is how *flexible* it is considering datasources, and post-operations, such as compression and encryption, by allowing to reuse existing programs.
  - Incremental backups is most useful if you want to backup big directories.
 
-Note 
 
-## Installation
-
-The package is available on pypi.org under the name `backup-timebox`. Supported python versions are `3.7` and newer.
-
-To install it, run `pip install backup-timebox`.
 
 ## How to use
 
