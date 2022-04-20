@@ -93,8 +93,9 @@ class Engine:
                     logger.exception(message)
                     other_errors.append(message)
                     continue
+                output_items = backup.rotation.set_remaining_days(output_items)
                 for output_item in output_items:
-                    if backup.rotation.remaining_days(output_item) <= 0:
+                    if output_item.remaining_days is not None and output_item.remaining_days <= 0:
                         try:
                             output.delete(output_item)
                             items_ok.append(output_item)
@@ -129,7 +130,9 @@ class Engine:
                     logger.exception("Failed listing backups in %s", output)
                     errors.append(str(exc))
                     continue
+
+                output_items = backup.rotation.set_remaining_days(output_items)
                 items[backup.name][str(output)] = [
-                    (item, backup.rotation.remaining_days(item)) for item in output_items
+                    (item, item.remaining_days) for item in output_items
                 ]
         return LsReport(items=items, errors=errors)

@@ -89,6 +89,19 @@ Keeps backups the given number of days.
 - type = "simple"
 - days[`integer`] **required** 
 
+### PeriodRotation
+
+Ensures oldest backups are kept for each of the given periods.
+
+    For example, if you specify months=2, the oldest of the current month,
+    and the oldest of the previous month, will be kept.
+    
+
+- type = "period"
+- days[`integer`] *(default: `None`)* 
+- months[`integer`] *(default: `None`)* 
+- years[`integer`] *(default: `None`)* 
+
 ## NotificationProvider
 
 Notification providers are used to send notifications.

@@ -32,6 +32,7 @@ class BackupItem(BaseModel):
     date: date
     extensions: List[str] = pydantic.Field(default_factory=list)
     size: Optional[int] = None
+    remaining_days: Optional[int] = None
 
     @staticmethod
     def from_filename(filename, size=None):
@@ -60,6 +61,9 @@ class BackupItem(BaseModel):
 
     def __str__(self):
         return f"[{self.name} on {self.date} ({self.size_str})]"
+
+    def __hash__(self):
+        return hash((self.name, self.date))
 
 
 class ProviderCommon(BaseModel, abc.ABC):
