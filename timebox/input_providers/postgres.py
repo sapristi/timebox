@@ -30,6 +30,7 @@ class PostgresInputProvider(InputProviderBase):
         if self.password is not None:
             env["PGPASSWORD"] = self.password
 
+        backup_item.extensions.append("sql")
         return cmd, env
 
     def __str__(self):
