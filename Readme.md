@@ -28,12 +28,12 @@ Timebox relies on
 
 Here's a feature comparison table with other open-source backup software:
 
-|                                                     | Running mode        | Supported platforms   | Incremental backups | Stateful | Data source                   | Encryption | Integrated scheduler | Centralised configuration |
-|----------------------------------------------------:|---------------------|-----------------------|---------------------|----------|-------------------------------|------------|----------------------|---------------------------|
-| timebox                                             | Cli program         | Linux                 |                ❌ No | ❌ No     | Local data, custom commands   | ✅ Yes      | ❌ No                 | ✅ Yes                     |
-| [blackbox](https://github.com/lemonsaurus/blackbox) | Cli program         | Linux                 | ❌ No                | ❌ No     | Local data, various databases | ❌ No       | ❌ No                 | ✅ Yes                     |
-| [duplicati](https://github.com/duplicati/duplicati) | Web server/ui + Cli | Linux, MacOS, Windows | ✅ Yes               | ✅ Yes    | Local data                    | ✅ Yes      | ✅ Yes                | ✅ Yes                     |
-| [restic](https://github.com/restic/restic)          | Cli program         | Linux, MacOS, Windows | ✅ Yes               | ✅ Yes    | Local data, stdin             | ✅ Yes      | ❌ No                 | ❌ No                      |
+|                                                     | Running mode        | Supported platforms   | Incremental backups |  Data source                   | Encryption | Integrated scheduler | Centralised configuration |
+|----------------------------------------------------:|---------------------|-----------------------|---------------------|-------------------------------|------------|----------------------|---------------------------|
+| timebox                                             | Cli program         | Linux                 |                ❌ No | Local data, custom commands   | ✅ Yes      | ❌ No                 | ✅ Yes                     |
+| [blackbox](https://github.com/lemonsaurus/blackbox) | Cli program         | Linux                 | ❌ No                | Local data, various databases | ❌ No       | ❌ No                 | ✅ Yes                     |
+| [duplicati](https://github.com/duplicati/duplicati) | Web server/ui + Cli | Linux, MacOS, Windows | ✅ Yes               | Local data                    | ✅ Yes      | ✅ Yes                | ✅ Yes                     |
+| [restic](https://github.com/restic/restic)          | Cli program         | Linux, MacOS, Windows | ✅ Yes               | Local data, stdin             | ✅ Yes      | ❌ No                 | ❌ No                      |
 
 **Notes**:
  - Supported storage backends is not included here, because there are so many of them, and also `rclone` does an amazing job of taking that burden away anyway.
