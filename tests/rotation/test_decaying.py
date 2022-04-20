@@ -32,8 +32,9 @@ def test_decaying_rotation_day0(base):
     rotation = DecayingRotation(
         type="decaying", offset=0, base=base, starting_point=starting_point
     )
-    item1 = BackupItem(name="test1", date=date.today())
-    assert rotation.remaining_days(item1) == 2 ** (base + 1)
+    item = BackupItem(name="test1", date=date.today())
+    item_with_rotation = rotation.set_remaining_days([item])[0]
+    assert item_with_rotation.remaining_days == 2 ** (base + 1)
 
 
 @pytest.mark.parametrize(
@@ -49,8 +50,9 @@ def test_decaying_rotation_day1(base):
     rotation = DecayingRotation(
         type="decaying", offset=0, base=base, starting_point=starting_point
     )
-    item1 = BackupItem(name="test1", date=date.today())
-    assert rotation.remaining_days(item1) == 2
+    item = BackupItem(name="test1", date=date.today())
+    item_with_rotation = rotation.set_remaining_days([item])[0]
+    assert item_with_rotation.remaining_days == 2
 
 
 @pytest.mark.parametrize(
@@ -66,5 +68,6 @@ def test_decaying_rotation_day_half(base):
     rotation = DecayingRotation(
         type="decaying", offset=0, base=base, starting_point=starting_point
     )
-    item1 = BackupItem(name="test1", date=date.today())
-    assert rotation.remaining_days(item1) == 2**base
+    item = BackupItem(name="test1", date=date.today())
+    item_with_rotation = rotation.set_remaining_days([item])[0]
+    assert item_with_rotation.remaining_days == 2**base

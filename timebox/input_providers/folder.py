@@ -16,8 +16,10 @@ class FolderInputProvider(InputProviderBase):
     compression: Optional[CompressionAlgo] = Field(
         CompressionAlgo.xz, doc_type=CompressionAlgo.get_doc()
     )
-    exclude: List[str] = Field(default_factory=list)
-    extra_args: List[str] = Field(default_factory=list)
+    exclude: List[str] = Field(default_factory=list, doc_help="Paths to exclude.")
+    extra_args: List[str] = Field(
+        default_factory=list, doc_help="Extra arguments to pass to the `tar` command."
+    )
 
     def _command(self, backup_item: BackupItem):
         backup_item.extensions.append("tar")

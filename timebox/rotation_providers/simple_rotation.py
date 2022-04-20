@@ -1,3 +1,5 @@
+from typing import List
+
 from typing_extensions import Literal
 
 from timebox.common import BackupItem
@@ -11,5 +13,8 @@ class SimpleRotation(RotationBase):
     type: Literal["simple"]
     days: int
 
-    def remaining_days(self, backup_item: BackupItem) -> int:
-        return self.days - backup_item.age
+    def set_remaining_days(self, backup_items: List[BackupItem]) -> List[BackupItem]:
+        return [
+            backup_item.copy(update={"remaining_days": self.days - backup_item.age})
+            for backup_item in backup_items
+        ]

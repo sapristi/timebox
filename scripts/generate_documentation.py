@@ -41,7 +41,22 @@ def prop_help(prop):
     help_text = prop.get("doc_help")
     if not help_text:
         return ""
-    return "\n  " + help_text
+    return "  \n  " + help_text
+
+
+def format_docstring(docstring: str):
+    def sanitize_line(line: str):
+        if line.startswith("    "):
+            return line[4:]
+        else:
+            return line
+
+    return "\n".join([sanitize_line(l) for l in docstring.splitlines()])
+
+
+def get_type(prop):
+    type = prop.get("doc_type") or prop["type"]
+    return type.replace("|", "\\|")
 
 
 def setup_template(filename):
@@ -51,6 +66,8 @@ def setup_template(filename):
     env.filters["optional_parameters"] = optional_parameters
     env.filters["type_token"] = type_token
     env.filters["prop_help"] = prop_help
+    env.filters["get_type"] = get_type
+    env.filters["format_docstring"] = format_docstring
     return env.get_template(filename)
 
 

@@ -6,8 +6,10 @@ from timebox.rotation_providers import SimpleRotation
 
 def test_simple_rotation():
     rotation = SimpleRotation(type="simple", days=5)
-    item1 = BackupItem(name="test1", date=date.today())
-    assert rotation.remaining_days(item1) == 5
-
-    item2 = BackupItem(name="test1", date=date.today() - timedelta(days=5))
-    assert rotation.remaining_days(item2) == 0
+    items = [
+        BackupItem(name="test1", date=date.today()),
+        BackupItem(name="test1", date=date.today() - timedelta(days=5)),
+    ]
+    items_with_remaining_days = rotation.set_remaining_days(items)
+    assert items_with_remaining_days[0].remaining_days == 5
+    assert items_with_remaining_days[1].remaining_days == 0

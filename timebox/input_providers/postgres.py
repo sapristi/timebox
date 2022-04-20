@@ -7,7 +7,7 @@ from .base import InputProviderBase
 
 
 class PostgresInputProvider(InputProviderBase):
-    """Dumps the given postgres database."""
+    """Dumps the given postgres database, using the `pg_dump` command."""
 
     type: Literal["postgres"]
     database: str
