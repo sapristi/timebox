@@ -4,4 +4,4 @@ from .decaying_rotation import DecayingRotation
 from .period_rotation import PeriodRotation
 from .simple_rotation import SimpleRotation
 
-RotationProvider = Union[DecayingRotation, SimpleRotation, PeriodRotation]
+RotationProvider = Union[SimpleRotation, PeriodRotation, DecayingRotation]
