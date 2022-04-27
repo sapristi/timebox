@@ -148,8 +148,8 @@ To give a practical example, you can have backups that span at least 256 days (a
 
 # Roadmap
 
- - Add a "days" / "weeks" / "months" / "years" rotation provider.
- - Add alert mechanism on space usage.
- - Add a way to retrieve backups locally.
+ - [x] Add a "days" / "weeks" / "months" / "years" rotation provider.
+ - [ ] Add alert mechanism on space usage.
+ - [ ] Add a way to retrieve backups locally.
    - Need a "reverse" command for transformers.
- - Host rclone configuration in config file.
+ - [ ] Host rclone configuration in config file.
